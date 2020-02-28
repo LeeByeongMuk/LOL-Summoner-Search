@@ -3,12 +3,30 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mysql = require('mysql');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var slidesRouter = require('./routes/slides');
 
 var app = express();
+
+// Connection 객체 생성
+var connection = mysql.createConnection({
+  host: 'localhost',
+  port: 3306,
+  user: 'root',
+  password: '$manso1007',
+  database: 'manso_table'
+});
+// Connect
+connection.connect(function (err) {
+  if (err) {
+    console.error('mysql connection error');
+    console.error(err);
+    throw err;
+  }
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +41,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/slides', slidesRouter);
+
+// insert
+app.post('/regist', function(req, res) {
+  var user = {
+    'id': req.body.id,
+    'name': req.body.name,
+    'address': req.body.address
+  };
+  var query = connection.query('insert into users set ?', user, function (err, result) {
+    if (err) {
+      console.error(err);
+      throw err;
+    }
+    res.status(200).send('success');
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
