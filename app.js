@@ -13,7 +13,7 @@ var app = express();
 
 // Connection 객체 생성
 var connection = mysql.createConnection({
-  host: 'localhost',
+  host: '127.0.0.1',
   port: 3306,
   user: 'root',
   password: '$manso1007',
@@ -43,9 +43,9 @@ app.use('/users', usersRouter);
 app.use('/slides', slidesRouter);
 
 // insert
-app.post('/regist', function(req, res) {
+app.post('/regist', function (req, res) {
   var user = {
-    'id': req.body.id,
+    'userid': req.body.userid,
     'name': req.body.name,
     'address': req.body.address
   };
