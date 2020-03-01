@@ -42,22 +42,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/slides', slidesRouter);
 
-// insert
-app.post('/regist', function (req, res) {
-  var user = {
-    'userid': req.body.userid,
-    'name': req.body.name,
-    'address': req.body.address
-  };
-  var query = connection.query('insert into users set ?', user, function (err, result) {
-    if (err) {
-      console.error(err);
-      throw err;
-    }
-    res.status(200).send('success');
-  });
-});
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
