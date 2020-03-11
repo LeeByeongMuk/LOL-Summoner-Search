@@ -59,7 +59,7 @@ router.post('/login', function (req, res) {
     if (err) {
       res.json({ // 매칭되는 아이디 없을 경우
         success: false,
-        message: 'Login failed please check your id or password!'
+        message: '등록되지 않은 아이디 입니다.'
       })
     }
     if (row[0] !== undefined && row[0].userid === user.userid) {
@@ -67,12 +67,14 @@ router.post('/login', function (req, res) {
         if (res2) {
           res.json({ // 로그인 성공
             success: true,
-            message: 'Login successful!'
+            message: '로그인 되셨습니다.',
+            userid: row[0].userid,
+            name: row[0].name
           })
         }
         else {
-          res.json({ // 매칭되는 아이디는 있으나, 비밀번호가 틀린 경우            success: false,
-            message: 'Login failed please check your id or password!'
+          res.json({ // 매칭되는 아이디는 있으나, 비밀번호가 틀린 경우
+            message: '비밀번호가 잘못 되었습니다.'
           })
         }
       })
