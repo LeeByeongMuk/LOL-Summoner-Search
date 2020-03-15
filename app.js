@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mysql = require('mysql');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
+var jsonParser = bodyParser.json();
 var bcrypt = require('bcrypt');
 
 var indexRouter = require('./routes/index');
@@ -29,6 +33,21 @@ connection.connect(function (err) {
     throw err;
   }
 });
+
+var options = {
+    host: '127.0.0.1',
+    port: 3306,
+    user: 'root',
+    password: '$manso1007',
+    database: 'manso_table'
+}
+var sessionStore = new MySQLStore(options);
+app.use(session({
+    secret: '!@#$%^&*',  // 암호화
+    resave: false,
+    saveUninitialized: true,
+    store: sessionStore
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
