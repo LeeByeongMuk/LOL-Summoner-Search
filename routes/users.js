@@ -1,8 +1,13 @@
 var express = require('express');
 var mysql = require('mysql');
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
 var bcrypt = require('bcrypt');
 var router = express.Router();
 
+var app = express();
+
+// Connection 객체 생성
 var connection = mysql.createConnection({
   host: '127.0.0.1',
   port: 3306,
@@ -19,6 +24,21 @@ connection.connect(function (err) {
     throw err;
   }
 });
+
+var options = {
+    host: '127.0.0.1',
+    port: 3306,
+    user: 'root',
+    password: '$manso1007',
+    database: 'manso_table'
+}
+var sessionStore = new MySQLStore(options);
+app.use(session({
+    secret: '!@#$%^&*',  // 암호화
+    resave: false,
+    saveUninitialized: true,
+    store: sessionStore
+}));
 
 router.post('/register', function (req, res) {
   const user = {
@@ -55,7 +75,8 @@ router.post('/login', function (req, res) {
     'userid': req.body.user.userid,
     'password': req.body.user.password
   };
-  connection.query('SELECT userid, password FROM users WHERE userid = "' + user.userid + '"', function (err, row) {
+  connection.query('SELECT userid, password FROM users WHERE userid = "' + user.userid + '"',
+  function (err, row) {
     if (err) {
       res.json({ // 매칭되는 아이디 없을 경우
         success: false,
@@ -68,8 +89,7 @@ router.post('/login', function (req, res) {
           res.json({ // 로그인 성공
             success: true,
             message: '로그인 되셨습니다.',
-            userid: row[0].userid,
-            name: row[0].name
+            result: row[0]
           })
         }
         else {
