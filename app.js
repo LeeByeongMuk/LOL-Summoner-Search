@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -60,7 +61,7 @@ app.use(session({
 }));
 
 app.use('/', indexRouter);
-app.use('/api/users', usersRouter);
+app.use('/api/users', cors(), usersRouter);
 app.use('/api/slides', slidesRouter);
 
 // catch 404 and forward to error handler
