@@ -86,10 +86,11 @@ router.post('/login', function (req, res) {
     if (row[0] !== undefined && row[0].userid === user.userid) {
       bcrypt.compare(user.password, row[0].password, function (err, res2) {
         if (res2) {
+          req.session.userNo = row[0].id;
+          req.session.save();
           res.json({ // 로그인 성공
             success: true,
-            message: '로그인 되셨습니다.',
-            result: row[0]
+            message: '로그인 되셨습니다.'
           })
         }
         else {
