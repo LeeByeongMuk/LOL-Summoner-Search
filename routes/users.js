@@ -1,106 +1,55 @@
-var express = require('express');
-var mysql = require('mysql');
-var session = require('express-session');
-var MySQLStore = require('express-mysql-session')(session);
-var bcrypt = require('bcrypt');
-var router = express.Router();
+const express = require('express');
+const mysql = require('mysql');
+const router = express.Router();
+const crypto = require('crypto');
+
+const dbConfig = require('../config.js');
+const connection = mysql.createConnection(dbConfig.SQL);
+const secret = dbConfig.KEY.secret;
+let User = require('../models/user');
 
 var app = express();
 
-// Connection 객체 생성
-var connection = mysql.createConnection({
-  host: '127.0.0.1',
-  port: 3306,
-  user: 'root',
-  password: '$manso1007',
-  database: 'manso_table'
-});
-
-// Connect
-connection.connect(function (err) {
-  if (err) {
-    console.error('mysql connection error');
-    console.error(err);
-    throw err;
-  }
-});
-
-var options = {
-    host: '127.0.0.1',
-    port: 3306,
-    user: 'root',
-    password: '$manso1007',
-    database: 'manso_table'
-}
-var sessionStore = new MySQLStore(options);
-app.use(session({
-    secret: '!@#$%^&*',  // 암호화
-    resave: false,
-    saveUninitialized: true,
-    store: sessionStore
-}));
-
 router.post('/register', function (req, res) {
-  const user = {
-    'userid': req.body.user.userid,
-    'name': req.body.user.name,
-    'password': req.body.user.password
-  };
-  connection.query('SELECT userid FROM users WHERE userid = "' + user.userid + '"', function (err, row) {
-    if (row[0] == undefined){ //  동일한 아이디가 없을경우,
-      const salt = bcrypt.genSaltSync();
-      const encryptedPassword = bcrypt.hashSync(user.password, salt);
+    const hash = crypto.createHmac('sha256', secret)
+        .update(req.body.password)
+        .digest('base64');
 
-      connection.query('INSERT INTO users (userid,name,password) VALUES ("' + user.userid + '","' + user.name + '","' + encryptedPassword + '")', user, function (err, row2) {
-        if (err) {
-            throw err;
-        }
-      });
+    User.user_id = req.body.user_id;
+    User.user_password = req.body.hash;
+    User.user_name = req.body.user_name;
+    console.log(User);
 
-      res.json({
-        success: true,
-        message: 'Sing Up Success!'
-      })
+    if (User.user_id && User.user_password && User.user_name) {
+        connection.query('SELECT user_id From users WHERE user_id = "${User.user_id}"', function (err, res, fields) {
+            if (res.length == 0) {
+                connection.query('INSERT INTO users (user_id, user_password, user_name) VALUES ("${User.user_id}"), "${User.user_password}", "${User.user_name}"', function (err, res2, fields) {
+                    if (err) {
+                        console.log(err);
+                    }
+
+                    res.status(200).json({
+                        'status': 200,
+                        'message': 'success'
+                    });
+                });
+            } else {
+                res.status(400).json({
+                    'status': 400,
+                    'message': '중복된 아이디 입니다.'
+                });
+            }
+        })
     } else {
-      res.json({
-        success: false,
-        message: 'Sign Up Failed Please use anoter ID'
-      })
+        res.status(400).json({
+            'status': 400,
+            'message': '값을 입력해 주세요.'
+        })
     }
-  });
 });
 
 router.post('/login', function (req, res) {
-  const user = {
-    'userid': req.body.user.userid,
-    'password': req.body.user.password
-  };
-  connection.query('SELECT userid, password FROM users WHERE userid = "' + user.userid + '"',
-  function (err, row) {
-    if (err) {
-      res.json({ // 매칭되는 아이디 없을 경우
-        success: false,
-        message: '등록되지 않은 아이디 입니다.'
-      })
-    }
-    if (row[0] !== undefined && row[0].userid === user.userid) {
-      bcrypt.compare(user.password, row[0].password, function (err, res2) {
-        if (res2) {
-          req.session.userNo = row[0].id;
-          req.session.save();
-          res.json({ // 로그인 성공
-            success: true,
-            message: '로그인 되셨습니다.'
-          })
-        }
-        else {
-          res.json({ // 매칭되는 아이디는 있으나, 비밀번호가 틀린 경우
-            message: '비밀번호가 잘못 되었습니다.'
-          })
-        }
-      })
-    }
-  })
+    // login
 });
 
 module.exports = router;
