@@ -43,7 +43,7 @@ connection.connect(function (err) {
 });
 
 app.use('/', indexRouter);
-app.use('/api/users', cors(), usersRouter);
+app.use('/api/users', usersRouter);
 app.use('/api/slides', slidesRouter);
 
 // catch 404 and forward to error handler

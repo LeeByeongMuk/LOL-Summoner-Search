@@ -7,5 +7,5 @@ exports.SQL = {
 }
 
 exports.KEY = {
-    'secret': 'Dinner'
+    secret: 'manso'
 }
