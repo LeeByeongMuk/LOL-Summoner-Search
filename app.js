@@ -6,11 +6,6 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cors = require('cors');
-const crypto = require('crypto');
-
-const dbConfig = require('./config.js');
-const connection = mysql.createConnection(dbConfig.SQL);
-const secret = dbConfig.KEY.secret;
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -32,15 +27,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Connect
-connection.connect(function (err) {
-    if (err) {
-        console.error('mysql connection error');
-        console.error(err);
-        throw err;
-    }
-});
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
