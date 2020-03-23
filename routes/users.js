@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
+var jwt = require('jsonwebtoken');
 
 const dbConfig = require('../config.js');
 const connection = mysql.createConnection(dbConfig.SQL);
@@ -50,8 +50,7 @@ router.post('/register', (req, res) => {
 router.post('/login', function (req, res) {
     User.user_id = req.body.user.id;
     User.user_password = req.body.user.password
-    let jwt_secret = 'ManSo';
-
+    let jwt_secret = 'manso';
 
     if (User.user_id) {
         connection.query(`SELECT user_password, user_name From users WHERE user_id = "${User.user_id}"`,
@@ -60,21 +59,19 @@ router.post('/login', function (req, res) {
                 console.log(err)
             }
 
-            console.log(result)
-
             const hash = crypto.createHmac('sha256', secret)
                 .update(req.body.user.password)
                 .digest('base64');
             User.user_name = result[0].user_name;
 
             if (hash == result[0].user_password) {
-                const getToken = new Promise((resolve,reject) => {
+                const getToken = new Promise((resolve, reject) => {
                     jwt.sign({
                         id: User.user_id,
                         name: User.user_name
                     }, jwt_secret, {
                         expiresIn: '7d',
-                        issuer: 'Manso',
+                        issuer: 'manso',
                         subject: 'userInfo'
                     }, (err, token) => {
                         if (err) {
@@ -106,7 +103,7 @@ router.post('/login', function (req, res) {
     }
 });
 
-router.post('/check', function (req, res) {
+router.get('/check', function (req, res) {
     const token = req.headers['x-access-token'] || req.query.token;
     let jwt_secret = 'manso';
 
