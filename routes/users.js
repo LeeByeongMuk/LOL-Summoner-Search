@@ -53,7 +53,7 @@ router.post('/login', function (req, res) {
     let jwt_secret = 'manso';
 
     if (User.user_id) {
-        connection.query(`SELECT user_password, user_name From users WHERE user_id = "${User.user_id}"`,
+        connection.query(`SELECT id, user_password, user_name From users WHERE user_id = "${User.user_id}"`,
         function (err, result, fields) {
             if (err) {
                 console.log(err)
@@ -67,7 +67,8 @@ router.post('/login', function (req, res) {
             if (hash == result[0].user_password) {
                 const getToken = new Promise((resolve, reject) => {
                     jwt.sign({
-                        id: User.user_id,
+                        id: result[0].id,
+                        userId: User.user_id,
                         name: User.user_name
                     }, jwt_secret, {
                         expiresIn: '7d',

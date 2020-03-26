@@ -1,6 +1,7 @@
 class Notice {
-    constructor(notice_title, notice_contents){
-        this.notice_title = notice_title;
-        this.notice_contents = notice_contents;
+    constructor(userId, title, contents){
+        this.userId = userId;
+        this.title = noticeTitle;
+        this.contents = noticeContents;
     }
 }
