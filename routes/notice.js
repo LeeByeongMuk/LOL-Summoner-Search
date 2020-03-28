@@ -21,7 +21,7 @@ router.post('/create', function (req, res) {
     Notice.contents = req.body.contents;
 
     if (Notice.title && Notice.contents) {
-        connection.query(`INSERT INTO notice (user_id, title, contents) VALUES (${Notice.userId}, ${Notice.title}, ${Notice.contents})`, function (err, result) {
+        connection.query(`INSERT INTO notice (user_id, title, contents) VALUES ('${Notice.userId}', '${Notice.title}', '${Notice.contents}')`, function (err, result) {
             if (err) {
                 console.log(err);
             }
