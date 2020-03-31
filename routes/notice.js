@@ -8,6 +8,12 @@ let Notice = require('../models/notice');
 
 router.get('/', function (req, res) {
     connection.query('SELECT * FROM notice', function (err, result) {
+        if (err) {
+            console.log(err)
+        }
+
+        console.log(result)
+
         res.json({
             'status': 200,
             'data': result
