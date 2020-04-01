@@ -3,21 +3,33 @@ const router = express.Router();
 const request = require('request');
 const urlencode = require('urlencode');
 
-router.post('/', function(req, res){
-    console.log(req.body);
+const key = 'RGAPI-44767d23-82bf-4a74-8594-f6acfad3a8bb';
 
+router.post('/id', function(req, res){
     let summonerName = req.body.summonerName;
-    const key = 'RGAPI-79a4e410-a192-4bcd-b6d2-b3ee3c5dcbd8';
-    const url = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${urlencode(summonerName)}?app_key=${key}`
+    let url = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${urlencode(summonerName)}?api_key=${key}`;
+
     request(url, function(err, response, body){
         if (err) {
             console.log(err);
         }
+        const data = JSON.parse(body);
 
-        console.log(url);
-        console.log(body);
+        if (data.status == '' || data.status == null || data.status == undefined) {
+            url = `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${urlencode(data.id)}?api_key=${key}`;
 
-        res.json(JSON.parse(body))
+            request(url, function(err2, response2, body2){
+                if (err2) {
+                    console.log(err2);
+                }
+
+                res.json(JSON.parse(body2));
+            });
+        } else {
+            res.json({
+                message: '검색 결과가 없습니다.'
+            })
+        }
     });
 });
 
