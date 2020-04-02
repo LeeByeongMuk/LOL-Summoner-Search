@@ -3,7 +3,7 @@ const router = express.Router();
 const request = require('request');
 const urlencode = require('urlencode');
 
-const key = 'RGAPI-44767d23-82bf-4a74-8594-f6acfad3a8bb';
+const key = 'RGAPI-a6f4aa29-de84-439a-9560-594d238e4cd6';
 
 router.post('/id', function(req, res){
     let summonerName = req.body.summonerName;
