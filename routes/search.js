@@ -3,7 +3,7 @@ const router = express.Router();
 const request = require('request');
 const urlencode = require('urlencode');
 
-const key = 'RGAPI-b155bfc4-45cb-46ea-b518-1959bd133a65';
+const key = 'RGAPI-f12620ff-cedc-4a75-854c-2d65a8b636e8';
 
 router.post('/id', function(req, res){
     let summonerName = req.body.summonerName;
@@ -38,7 +38,7 @@ router.post('/rank', function(req, res) {
 });
 
 router.post('/match', function(req, res) {
-    const endIndex = 1;
+    const endIndex = 10;
     const beginIndex = 0;
     let url = `https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/${urlencode(req.body.id)}?endIndex=${endIndex}&beginIndex=${beginIndex}&api_key=${key}`;
 
@@ -54,34 +54,12 @@ router.post('/match', function(req, res) {
         })
     };
 
-    // const getData = function(matches, callback) {
-    //     for (let value in matches) {
-    //         getMatch(matches[value].gameId, function(res) {
-    //             rdata[value] = res;
-    //         });
-    //     }
-    //
-    // }
-
     request(url, function(err, response, body){
         if (err) {
             console.log(err);
         }
 
-        let data = [];
-        const matchKey = JSON.parse(body);
-
-        for (let value in matchKey.matches) {
-            getMatch(matchKey.matches[value].gameId, function(res) {
-                data[value] = res;
-
-                console.log(data[value]);
-            });
-            console.log(data);
-        }
-
-
-        res.json(data);
+        res.json(JSON.parse(body));
     });
 });
 
