@@ -3,7 +3,7 @@ const router = express.Router();
 const request = require('request');
 const urlencode = require('urlencode');
 
-const key = 'RGAPI-f12620ff-cedc-4a75-854c-2d65a8b636e8';
+const key = 'RGAPI-31271f78-c68f-474e-b9f2-809ea3319344';
 
 router.post('/id', function(req, res){
     let summonerName = req.body.summonerName;
@@ -38,7 +38,7 @@ router.post('/rank', function(req, res) {
 });
 
 router.post('/match', function(req, res) {
-    const endIndex = 10;
+    const endIndex = 1;
     const beginIndex = 0;
     let url = `https://kr.api.riotgames.com/lol/match/v4/matchlists/by-account/${urlencode(req.body.id)}?endIndex=${endIndex}&beginIndex=${beginIndex}&api_key=${key}`;
 
@@ -62,5 +62,18 @@ router.post('/match', function(req, res) {
         res.json(JSON.parse(body));
     });
 });
+
+router.post('/match/detail', function(req, res) {
+    let url = `https://kr.api.riotgames.com/lol/match/v4/matches/${req.body.matchId}?api_key=${key}`;
+
+    request(url, function(err, response, body) {
+        if (err) {
+            console.log(err);
+        }
+
+        res.json(JSON.parse(body));
+    })
+
+})
 
 module.exports = router;
