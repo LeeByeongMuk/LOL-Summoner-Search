@@ -3,7 +3,7 @@ const router = express.Router();
 const request = require('request');
 const urlencode = require('urlencode');
 
-const key = 'RGAPI-bc89b98a-d511-4655-90fa-74e9cd498beb';
+const key = 'RGAPI-0ed3bcfa-b367-4e38-bf27-120ab3f29201';
 
 router.post('/id', function(req, res){
     let summonerName = req.body.summonerName;
@@ -64,7 +64,7 @@ router.post('/match', function(req, res) {
 });
 
 router.post('/match/detail', function(req, res) {
-    let url = `https://kr.api.riotgames.com/lol/match/v4/matches/${req.body.matchId}?api_key=${key}`;
+    let url = `https://kr.api.riotgames.com/lol/match/v4/matches/${req.body.gameId}?queue=${req.body.queue}&api_key=${key}`;
 
     request(url, function(err, response, body) {
         if (err) {
