@@ -1,0 +1,42 @@
+@import '../helpers/_variables';
+@import '../helpers/_extends';
+@import '../helpers/_mixins';
+
+.search-area{
+    @include size(100%);
+    @include padding(35px 0);
+    overflow: hidden;
+
+    .main-title{
+        font-weight: bold;
+        font-size: 30px;
+        color: $bg-color-black;
+        text-align: center;
+    }
+
+    .search{
+        @include size(600px, 50px);
+        @include margin(40px auto 0);
+        @include border-radius(10px);
+        overflow: hidden;
+        border: 1px solid $page-color;
+        background-color: $page-color;
+
+        .search-name{
+            @include size(450px, 50px);
+            @include padding(0 0 0 10px);
+            float: left;
+            border: 0;
+            font-size: 16px;
+            color: $page-color;
+        }
+
+        .btn-search{
+            @include size(50px, 50px);
+            float: left;
+            border: 0;
+            background-color: $white;
+            color: $white;
+        }
+    }
+}

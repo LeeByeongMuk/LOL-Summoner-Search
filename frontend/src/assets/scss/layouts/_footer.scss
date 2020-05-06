@@ -1,0 +1,21 @@
+@import '../helpers/_variables';
+@import '../helpers/_extends';
+@import '../helpers/_mixins';
+
+.footer{
+    @include size(width 100% min $screen-size, 20px);
+    @include padding(20px 0);
+    overflow: hidden;
+    background-color: $bg-color-white;
+
+    .footer-wrap{
+        @include size($screen-size);
+        @include margin(0 auto);
+    }
+
+    .copyright{
+        font-size: 16px;
+        line-height: 20px;
+        color: $bg-color-black;
+    }
+}
