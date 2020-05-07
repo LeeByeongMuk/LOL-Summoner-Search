@@ -44,8 +44,8 @@ export default {
     methods: {
         summonerRank (id) {
             // 랭크 정보 초기화
-            this.isLoading = true;
             this.rankData = [];
+            this.isLoading = true;
 
             // 랭크 정보 데이터
             this.$axios.post(`${this.$store.state.host}/api/search/rank`, {
@@ -53,7 +53,11 @@ export default {
             })
                 .then(
                     res => {
-                        this.rankData = res.data;
+                        if (res.data.status) {
+                            this.rankData = [];
+                        } else {
+                            this.rankData = res.data;
+                        }
                         this.isLoading = false;
                     },
                     err => {

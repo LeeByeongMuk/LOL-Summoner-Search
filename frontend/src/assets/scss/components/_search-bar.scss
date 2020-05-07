@@ -20,10 +20,10 @@
         @include border-radius(10px);
         overflow: hidden;
         border: 1px solid $page-color;
-        background-color: $page-color;
+        background-color: $white;
 
         .search-name{
-            @include size(450px, 50px);
+            @include size(500px, 50px);
             @include padding(0 0 0 10px);
             float: left;
             border: 0;
@@ -32,10 +32,10 @@
         }
 
         .btn-search{
-            @include size(50px, 50px);
+            @include size(90px, 50px);
             float: left;
             border: 0;
-            background-color: $white;
+            background-color: $page-color;
             color: $white;
         }
     }

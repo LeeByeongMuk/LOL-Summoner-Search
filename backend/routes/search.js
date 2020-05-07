@@ -7,8 +7,6 @@ const urlencode = require('urlencode');
 const config = require('../config.js');
 const key = config.KEY;
 
-console.log(key);
-
 router.post('/id', function(req, res){
     let summonerName = req.body.summonerName;
     let url = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${urlencode(summonerName)}?api_key=${key}`;

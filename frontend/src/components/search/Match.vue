@@ -115,8 +115,8 @@ export default {
     methods: {
         summonerMatch (id) {
             // 초기화
-            this.isLoading = true;
             this.matchData = [];
+            this.isLoading = true;
 
             // 데이터
             this.$axios.post(`${this.$store.state.host}/api/search/match`, {

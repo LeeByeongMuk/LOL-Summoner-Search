@@ -29,11 +29,12 @@ export default {
                 .then(
                     res => {
                         if (res.data.id === '' || res.data.id === null || res.data.id === undefined) {
-                            this.summonerInfo = [];
+                            this.summonerInfo = {};
                             alert(res.data.message);
                         } else {
                             this.summonerInfo = res.data;
                         }
+
                         this.$emit('update', {
                             summonerInfo: this.summonerInfo
                         })
